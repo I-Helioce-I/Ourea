@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Water
-  m_Shader: {fileID: -6465566751694194690, guid: eff0ecc391252bc41ae0fa4f4c4d47c3,
+  m_Name: M_WaterV2
+  m_Shader: {fileID: -6465566751694194690, guid: b04ca3c5001c85e4a908ab35422cedb2,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -29,10 +29,6 @@ Material:
         m_Texture: {fileID: 2800000, guid: 338d77a45b4c8404fa282c1abc87e619, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _ReflectionMap:
-        m_Texture: {fileID: 2800000, guid: 5da6436799b2e9648af502d6b30880d9, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -51,14 +47,12 @@ Material:
     - _Depht_Fade: 0.09
     - _Foam: 1
     - _FoamScale: 0.91
-    - _Lerp: 0.36
     - _NormalStrengh: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReflectionRefraction: 0.12
     - _Refraction: 0.08
     - _Smoothness: 1
-    - _WaterFloat: 0
     - _WaterLerp: 0.5
     - _Wave: 0.03
     m_Colors:
@@ -69,7 +63,7 @@ Material:
     - _WaterSpeed1: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _WaterSpeed2: {r: -0.1, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &6443863055931481664
+--- !u!114 &2882227561928482360
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
