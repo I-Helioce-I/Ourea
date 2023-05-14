@@ -6,16 +6,5 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private void Update()
-    {
-        ExtraMovement();
-    }
-
-    private void ExtraMovement()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-
-        }
-    }
+    
 }

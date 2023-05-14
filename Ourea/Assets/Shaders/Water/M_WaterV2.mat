@@ -43,21 +43,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Depht: 10
-    - _Depht_Fade: 0.09
+    - _Depht: -0.34
+    - _Depht_Fade: 3
     - _Foam: 1
-    - _FoamScale: 0.91
+    - _FoamScale: 2.67
     - _NormalStrengh: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReflectionRefraction: 0.12
     - _Refraction: 0.08
-    - _Smoothness: 1
+    - _Smoothness: 0.688
     - _WaterLerp: 0.5
-    - _Wave: 0.03
+    - _Wave: 0.1
     m_Colors:
-    - _Albedo: {r: 1, g: 1, b: 1, a: 0}
-    - _FoamColor: {r: 1, g: 1, b: 1, a: 0}
+    - _Albedo: {r: 0.3160377, g: 0.9068532, b: 1, a: 0}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _UV1: {r: 4, g: 4, b: -0.3, a: 0.37}
     - _UV2: {r: 6, g: 6, b: 0, a: 0}
     - _WaterSpeed1: {r: 0.1, g: 0.1, b: 0, a: 0}

@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TreeEditor;
+using Cinemachine;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+using Input = UnityEngine.Input;
 
 public class ShipControlller : MonoBehaviour
 {
@@ -18,61 +15,239 @@ public class ShipControlller : MonoBehaviour
 
     Vector2 lookInput, screenCenter, mouseDistance;
 
-    float rollInput;
-
     [SerializeField]
-    float rollSpeed = 90f, rollAcceleration = 3.5f;
+    bool cruiseMode = false;
 
     [SerializeField]
     Animator pcAnimator;
     [SerializeField]
     GameObject renderer;
-    Quaternion startPosition, endPosition ;
+    [SerializeField]
+    CinemachineFreeLook flCam;
+    [SerializeField]
+    CinemachineVirtualCamera vC;
+    public CinemachineBrain cB;
+
+    [SerializeField]
+    CharacterState currentState = CharacterState.Stationnary_Idle;
+
+    private CharacterController controller;
+    public Transform cam;
+
+    [SerializeField]
+    float speed = 5f;
+
+    [SerializeField]
+    float turnSmoothTime = 0.1f;
+    float turnSmoothVelocity;
+
+    public enum CharacterState
+    {
+        Stationnary_Idle,
+        Stationnary_Moving,
+        Swim_Idle,
+        Cruise_Idle,
+        Aim
+    }
 
     private void Start()
     {
-        //Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         screenCenter.x = Screen.width * 0.5f;
         screenCenter.y = Screen.height * 0.5f;
-
-        startPosition = transform.rotation;
+        controller = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
-        Movement();
+        MovementHandler();
 
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            ChangeState(CharacterState.Cruise_Idle);
+        }
+        else if (Input.GetKeyUp(KeyCode.V))
+        {
+            ChangeState(CharacterState.Stationnary_Idle);
+        }
+        
+        if (Input.GetKey(KeyCode.C))
+        {
+            ChangeState(CharacterState.Swim_Idle);
+        }
+
+        if(Input.GetKeyUp(KeyCode.C))
+        {
+            ChangeState(CharacterState.Stationnary_Idle);
+        }
+
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            ChangeState(CharacterState.Aim);
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            ChangeState(CharacterState.Stationnary_Idle);
+        }
     }
 
-    private void Movement()
+    private void MovementHandler()
     {
-        lookInput.x = Input.mousePosition.x;
-        lookInput.y = Input.mousePosition.y;
+        switch (currentState)
+        {
+            case CharacterState.Stationnary_Idle:
+                {
+                    StationnaryMovement();
+                }
+                break;
+            case CharacterState.Stationnary_Moving:
+                {
+                    
+                }
+                break;
+            case CharacterState.Swim_Idle:
+                {
+                    SwimForward();
+                }
+                break;
+            case CharacterState.Cruise_Idle:
+                {
+                    SwimForward();
+                }
+                break;
+            case CharacterState.Aim:
+                {
+                    SwimForward();
 
-        float deadzone = 200f;
-        float maxDistance = (Screen.width / 2f - deadzone) / (Screen.width / 2f);
-        Vector2 mousePos = new Vector2(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
-        Vector2 center = new Vector2(0.5f, 0.5f);
-        Vector2 offset = (mousePos - center) / maxDistance;
-        mouseDistance = Vector2.ClampMagnitude(offset, 1f);
-
-
-        //mouseDistance = Vector2.ClampMagnitude(mouseDistance, 1f);
-
-        rollInput = Mathf.Lerp(rollInput, Input.GetAxisRaw("Roll"), rollAcceleration * Time.deltaTime);
-
-        transform.Rotate(-mouseDistance.y * lookRateSpeed * Time.deltaTime, mouseDistance.x * lookRateSpeed * Time.deltaTime, rollInput * rollSpeed * Time.deltaTime, Space.Self);
-
-        activeForwardSpeed = Mathf.Lerp(activeForwardSpeed, Input.GetAxisRaw("Vertical") * forwardSpeed, forwardAcceleration * Time.deltaTime);
-        activeStrafeSpeed = Mathf.Lerp(activeStrafeSpeed, Input.GetAxisRaw("Horizontal") * strafeSpeed, strafeAcceleration * Time.deltaTime);
-        activeHoverSpeed = Mathf.Lerp(activeHoverSpeed, Input.GetAxisRaw("Hover") * hoverSpeed, hoverAcceleration * Time.deltaTime);
-
-        pcAnimator.SetFloat("Speed", activeForwardSpeed * forwardSpeed * 4 / 100);
-
-
-        transform.position += Vector3.Lerp(transform.position, transform.forward * activeForwardSpeed * Time.deltaTime, 5f);
-        transform.position += Vector3.Lerp(transform.position, (transform.right * activeStrafeSpeed * Time.deltaTime), 5f) + Vector3.Lerp(transform.position, (transform.up * activeHoverSpeed * Time.deltaTime), 5f);
-
+                }
+                break;
+            default: break;
+        }
     }
 
+    public void ChangeState(CharacterState newState)
+    {
+        //Exit transition
+        switch (currentState)
+        {
+            case CharacterState.Stationnary_Idle:
+                {
+                    
+                    
+                }
+                break;
+            case CharacterState.Stationnary_Moving:
+                {
+                    
+                }
+                break;
+            case CharacterState.Swim_Idle:
+                {
+                    pcAnimator.SetBool("Swim", false);
+                    speed = 2.5f;
+                }
+                break;
+            case CharacterState.Cruise_Idle:
+                {
+                    pcAnimator.SetBool("Cruise", false);
+                    
+                }
+                break;
+            case CharacterState.Aim:
+                {
+                    pcAnimator.SetBool("Aim", false);
+                }
+                break;
+            default: break;
+        }
+
+        currentState = newState;
+
+        //Enter transition
+        switch (currentState)
+        {
+            case CharacterState.Stationnary_Idle:
+                {
+                    OrientToWorldUp();
+                    speed = 2.5f;
+                    
+                }
+                break;
+            case CharacterState.Stationnary_Moving:
+                {
+
+                    
+                }
+                break;
+            case CharacterState.Swim_Idle:
+                {
+                    pcAnimator.SetBool("Swim", true);
+                    speed = 10;
+                }
+                break;
+            case CharacterState.Cruise_Idle:
+                {
+                    pcAnimator.SetBool("Cruise", true);
+                    speed = 25;
+                }
+                break;
+            case CharacterState.Aim:
+                {
+                    pcAnimator.SetBool("Aim", true);
+                }
+                break;
+            default: break;
+        }
+    }
+
+    void OrientToWorldUp()
+    {
+        float rotationSpeed = 2;
+
+        Quaternion rotation = Quaternion.FromToRotation(transform.up, new Vector3(transform.localRotation.x, 1, transform.localRotation.z));
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.deltaTime * rotationSpeed);
+    }
+
+    public void StationnaryMovement()
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+        float hover = Input.GetAxisRaw("Hover");
+
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
+        {
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            controller.Move(moveDirection.normalized * speed * Time.deltaTime);
+        }
+        controller.Move(new Vector3(0, hover, 0) * speed * Time.deltaTime);
+    }
+
+    public void SwimForward()
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
+        {
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            controller.Move(cB.transform.forward * speed * Time.deltaTime);
+        }
+
+        transform.rotation = Quaternion.Euler(cB.transform.localEulerAngles);
+    }
 }
