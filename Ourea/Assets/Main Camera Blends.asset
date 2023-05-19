@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CustomBlends:
   - m_From: FreeLook
-    m_To: CM vcam1
+    m_To: AimCam
     m_Blend:
       m_Style: 2
       m_Time: 0.5
@@ -24,11 +24,11 @@ MonoBehaviour:
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 0
-  - m_From: CM vcam1
+  - m_From: AimCam
     m_To: FreeLook
     m_Blend:
       m_Style: 3
-      m_Time: 2.5
+      m_Time: 0.5
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []

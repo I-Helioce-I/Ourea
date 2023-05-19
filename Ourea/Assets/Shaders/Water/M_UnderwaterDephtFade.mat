@@ -53,5 +53,5 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Albedo: {r: 0.4190103, g: 0.67091864, b: 0.8301887, a: 0}
+    - _Albedo: {r: 0.04685831, g: 0.12177384, b: 0.3679245, a: 0}
   m_BuildTextureStacks: []
